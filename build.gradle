@@ -1,0 +1,58 @@
+/**
+ ******************  Script Configuration ******************
+ */
+buildscript {
+    repositories {
+        jcenter()
+
+        maven {
+            url "http://sandec.bintray.com/repo"
+        }
+    }
+
+    dependencies {
+        classpath 'com.sandec.jpro:jpro-plugin-gradle:2018.1.1'
+    }
+}
+
+/**
+ ******************  Java Configuration ******************
+ */
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+    jcenter()
+
+    maven {
+        url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+dependencies {
+    compile 'com.github.almasb:fxgl:0.5.0-SNAPSHOT'
+}
+
+/**
+ ******************  jpro Configuration ******************
+ */
+apply plugin: 'com.sandec.jpro'
+
+/**
+ * App Main Class
+ */
+mainClassName = 'com.almasb.fxgltest.WebApp'
+
+/**
+ * jpro settings
+ */
+jpro {
+
+    //jpro server port
+    port = 8080
+}
