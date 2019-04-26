@@ -1,24 +1,45 @@
+/*
+ * FXGL - JavaFX Game Library. The MIT License (MIT).
+ * Copyright (c) AlmasB (almaslvl@gmail.com).
+ * See LICENSE for details.
+ */
+
 package com.almasb.fxgltest;
 
 import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
-import com.almasb.fxgl.extra.entity.components.OffscreenCleanComponent;
-import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.settings.GameSettings;
+import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
-import static com.almasb.fxgl.app.DSLKt.loopBGM;
-import static com.almasb.fxgl.app.DSLKt.play;
+// NOTE: this is crucial, the import pulls in many useful methods
+import static com.almasb.fxgl.dsl.FXGL.*;
 
+/**
+ * This is an FXGL version of the libGDX simple game tutorial, which can be found
+ * here - https://github.com/libgdx/libgdx/wiki/A-simple-game
+ *
+ * The player can move the bucket left and right to catch water droplets.
+ * There are no win/lose conditions.
+ *
+ * Note: for simplicity's sake all of the code is kept in this file.
+ * In addition, most of typical FXGL API is not used to avoid overwhelming
+ * FXGL beginners with a lot of new concepts to learn.
+ *
+ * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
+ */
 public class SampleGameApp extends GameApplication {
 
+    /**
+     * Types of entities in this game.
+     */
     public enum DropType {
         DROPLET, BUCKET
     }
+
+    private Entity bucket;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -29,28 +50,22 @@ public class SampleGameApp extends GameApplication {
     }
 
     @Override
-    protected void preInit() {
-        loopBGM("bgm.mp3");
+    protected void initInput() {
+        onKey(KeyCode.A, "Move Left", () -> bucket.translateX(-200 * tpf()));
+        onKey(KeyCode.D, "Move Right", () -> bucket.translateX(200 * tpf()));
     }
 
     @Override
     protected void initGame() {
-        spawnBucket();
+        bucket = spawnBucket();
 
-        getMasterTimer().runAtInterval(() -> {
-            spawnDroplet();
-        }, Duration.seconds(1));
+        run(() -> spawnDroplet(), Duration.seconds(1));
     }
 
     @Override
     protected void initPhysics() {
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(DropType.BUCKET, DropType.DROPLET) {
-            @Override
-            protected void onCollisionBegin(Entity bucket, Entity droplet) {
-                droplet.removeFromWorld();
-
-                play("drop.wav");
-            }
+        onCollisionBegin(DropType.BUCKET, DropType.DROPLET, (bucket, droplet) -> {
+            droplet.removeFromWorld();
         });
     }
 
@@ -59,31 +74,26 @@ public class SampleGameApp extends GameApplication {
         getGameWorld().getEntitiesByType(DropType.DROPLET).forEach(droplet -> droplet.translateY(150 * tpf));
     }
 
-    private void spawnBucket() {
-        Entities.builder()
-                .at(getWidth() / 2, getHeight() - 200)
+    private Entity spawnBucket() {
+        return entityBuilder()
                 .type(DropType.BUCKET)
-                .viewFromTextureWithBBox("bucket.png")
+                .at(getAppWidth() / 2, getAppHeight() - 200)
+                .viewWithBBox("bucket.png")
                 .with(new CollidableComponent(true))
-                .with(new BucketComponent())
                 .buildAndAttach();
     }
 
-    private void spawnDroplet() {
-        Entities.builder()
-                .at(FXGLMath.random(getWidth() - 64), 0)
+    private Entity spawnDroplet() {
+        return entityBuilder()
                 .type(DropType.DROPLET)
-                .viewFromTextureWithBBox("droplet.png")
+                .at(FXGLMath.random(getAppWidth() - 64), 0)
+                .viewWithBBox("droplet.png")
                 .with(new CollidableComponent(true))
-                .with(new OffscreenCleanComponent())
                 .buildAndAttach();
     }
 
-    private class BucketComponent extends Component {
-
-        @Override
-        public void onUpdate(double tpf) {
-            entity.setPosition(getInput().getMouseXWorld() - 32, getHeight() - 200);
-        }
+    public static void main(String[] args) {
+        launch(args);
     }
 }
+

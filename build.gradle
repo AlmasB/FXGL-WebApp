@@ -1,58 +1,73 @@
+
 /**
  ******************  Script Configuration ******************
  */
 buildscript {
-    repositories {
-        jcenter()
+  repositories {
+    jcenter()
+    mavenCentral()
 
-        maven {
-            url "http://sandec.bintray.com/repo"
-        }
+    maven {
+      url "http://sandec.bintray.com/repo"
+        
     }
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+  }
 
-    dependencies {
-        classpath 'com.sandec.jpro:jpro-plugin-gradle:2018.1.1'
-    }
+  dependencies {
+    classpath 'com.sandec.jpro:jpro-plugin-gradle:2018.1.13'
+    classpath "org.javafxports:jfxmobile-plugin:1.3.15"
+    //classpath "org.openjfx:javafx-plugin:0.0.7"
+  }
 }
 
-/**
- ******************  Java Configuration ******************
- */
-apply plugin: 'java'
-apply plugin: 'application'
-
 repositories {
-    jcenter()
-
+mavenCentral()
+  jcenter()
     maven {
         url 'http://oss.sonatype.org/content/repositories/snapshots'
     }
 }
 
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-}
 
-dependencies {
-    compile 'com.github.almasb:fxgl:0.5.0-SNAPSHOT'
-}
 
-/**
- ******************  jpro Configuration ******************
- */
+
+apply plugin: 'java'
+apply plugin: 'application'
+//apply plugin: 'org.openjfx.javafxplugin'
 apply plugin: 'com.sandec.jpro'
 
-/**
- * App Main Class
- */
+
+
+
+dependencies {
+    compile 'com.github.almasb:fxgl:dev-SNAPSHOT'
+}
+
+//javafx {
+    //version = "12"
+    //modules = [ 'javafx.controls' ]
+//}
+
+
+
+
 mainClassName = 'com.almasb.fxgltest.WebApp'
 
 /**
  * jpro settings
  */
 jpro {
+  // for debugging
+  // JVMArgs << '-agentlib:jdwp=transport=dt_socket,server=n,address=5006,suspend=y'
 
-    //jpro server port
-    port = 8080
+  JVMArgs << '-Xmx1000m'
+
+  //jpro server port
+  port = 8080
+
+  //jpro version (optional)
+  jproVersion = "2018.1.13"
 }
