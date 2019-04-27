@@ -26,3 +26,7 @@ build/
 # logs #
 *.log
 logs/
+
+system/
+profiles/
+RUNNING_PID

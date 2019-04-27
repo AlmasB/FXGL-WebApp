@@ -6,6 +6,7 @@
 
 package com.almasb.fxgltest;
 
+import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
@@ -47,6 +48,9 @@ public class SampleGameApp extends GameApplication {
         settings.setVersion("1.0");
         settings.setWidth(480);
         settings.setHeight(800);
+        settings.setMenuEnabled(true);
+        settings.setIntroEnabled(true);
+        settings.setApplicationMode(ApplicationMode.DEBUG);
     }
 
     @Override
@@ -66,6 +70,8 @@ public class SampleGameApp extends GameApplication {
     protected void initPhysics() {
         onCollisionBegin(DropType.BUCKET, DropType.DROPLET, (bucket, droplet) -> {
             droplet.removeFromWorld();
+            
+            play("drop.wav");
         });
     }
 
