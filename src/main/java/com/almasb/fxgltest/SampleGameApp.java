@@ -48,8 +48,7 @@ public class SampleGameApp extends GameApplication {
         settings.setVersion("1.0");
         settings.setWidth(480);
         settings.setHeight(800);
-        settings.setMenuEnabled(true);
-        settings.setIntroEnabled(true);
+        settings.setExperimentalNative(true);
         settings.setApplicationMode(ApplicationMode.DEBUG);
     }
 
@@ -92,7 +91,7 @@ public class SampleGameApp extends GameApplication {
     private Entity spawnDroplet() {
         return entityBuilder()
                 .type(DropType.DROPLET)
-                .at(FXGLMath.random(getAppWidth() - 64), 0)
+                .at(FXGLMath.random(0, getAppWidth() - 64), 0)
                 .viewWithBBox("droplet.png")
                 .with(new CollidableComponent(true))
                 .buildAndAttach();

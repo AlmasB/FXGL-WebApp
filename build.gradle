@@ -10,12 +10,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.sandec.jpro:jpro-plugin-gradle:2018.1.13'
+        classpath 'com.sandec.jpro:jpro-plugin-gradle:2019.2.1'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'com.google.osdetector'
 
 compileJava {
     sourceCompatibility = 11
@@ -28,10 +29,21 @@ repositories {
     maven {
         url 'http://oss.sonatype.org/content/repositories/snapshots'
     }
+    maven {
+        url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/'
+    }
 }
 
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+
 dependencies {
-    compile 'com.github.almasb:fxgl:dev-SNAPSHOT'
+    compile "org.openjfx:javafx-base:12.0.1:$platform"
+    compile "org.openjfx:javafx-graphics:12.0.1:$platform"
+    compile "org.openjfx:javafx-controls:12.0.1:$platform"
+    compile "org.openjfx:javafx-fxml:12.0.1:$platform"
+    compile "org.openjfx:javafx-media:12.0.1:$platform"
+    compile "org.openjfx:javafx-web:12.0.1:$platform"
+    compile 'com.github.almasb:fxgl:11.7'
 }
 
 
@@ -67,7 +79,4 @@ jpro {
 
     //jpro server port
     port = 55555
-
-    //jpro version (optional)
-    jproVersion = "2018.1.13"
 }
