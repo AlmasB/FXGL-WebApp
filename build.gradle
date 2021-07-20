@@ -4,13 +4,13 @@ buildscript {
         mavenCentral()
 
         maven {
-            url "http://sandec.bintray.com/repo"
+            url "https://sandec.jfrog.io/artifactory/repo"
 
         }
     }
 
     dependencies {
-        classpath 'com.sandec.jpro:jpro-plugin-gradle:2019.2.1'
+        classpath 'com.sandec.jpro:jpro-plugin-gradle:2021.1.2'
     }
 }
 
@@ -37,12 +37,12 @@ repositories {
 ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 
 dependencies {
-    compile "org.openjfx:javafx-base:12.0.1:$platform"
-    compile "org.openjfx:javafx-graphics:12.0.1:$platform"
-    compile "org.openjfx:javafx-controls:12.0.1:$platform"
-    compile "org.openjfx:javafx-fxml:12.0.1:$platform"
-    compile "org.openjfx:javafx-media:12.0.1:$platform"
-    compile "org.openjfx:javafx-web:12.0.1:$platform"
+    compile "org.openjfx:javafx-base:15:$platform"
+    compile "org.openjfx:javafx-graphics:15:$platform"
+    compile "org.openjfx:javafx-controls:15:$platform"
+    compile "org.openjfx:javafx-fxml:15:$platform"
+    compile "org.openjfx:javafx-media:15:$platform"
+    compile "org.openjfx:javafx-web:15:$platform"
     compile 'com.github.almasb:fxgl:11.7'
 }
 
