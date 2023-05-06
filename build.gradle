@@ -1,22 +1,24 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
+        gradlePluginPortal()
 
         maven {
-            url "http://sandec.bintray.com/repo"
-
+            url "https://sandec.jfrog.io/artifactory/repo"
         }
     }
 
     dependencies {
-        classpath 'com.sandec.jpro:jpro-plugin-gradle:2019.2.1'
+        classpath 'one.jpro:jpro-gradle-plugin:2023.1.0'
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'com.google.osdetector'
+//apply plugin: 'java'
+//apply plugin: 'application'
+
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
 
 compileJava {
     sourceCompatibility = 11
@@ -27,54 +29,31 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url 'http://oss.sonatype.org/content/repositories/snapshots'
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven {
         url 'https://nexus.gluonhq.com/nexus/content/repositories/releases/'
     }
 }
 
-ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
-
 dependencies {
-    compile "org.openjfx:javafx-base:12.0.1:$platform"
-    compile "org.openjfx:javafx-graphics:12.0.1:$platform"
-    compile "org.openjfx:javafx-controls:12.0.1:$platform"
-    compile "org.openjfx:javafx-fxml:12.0.1:$platform"
-    compile "org.openjfx:javafx-media:12.0.1:$platform"
-    compile "org.openjfx:javafx-web:12.0.1:$platform"
-    compile 'com.github.almasb:fxgl:11.7'
+    implementation 'com.github.almasb:fxgl:17.3'
 }
 
-
-compileJava {
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.fxml,javafx.controls'
-        ]
-    }
+javafx {
+    version = '20'
+    modules = [ 'javafx.graphics', 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.web' ]
 }
 
-
-run {
-    doFirst {
-        jvmArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.fxml,javafx.controls'
-        ]
-    }
-}
-
-
-apply plugin: 'com.sandec.jpro'
+apply plugin: 'jpro-gradle-plugin'
 
 mainClassName = 'com.almasb.fxgltest.WebApp'
 
-jpro {
-    // for debugging
-    // JVMArgs << '-agentlib:jdwp=transport=dt_socket,server=n,address=5006,suspend=y'
+application {
+    mainModule = moduleName
+}
 
+jpro {
     JVMArgs << '-Xmx1000m'
 
     //jpro server port

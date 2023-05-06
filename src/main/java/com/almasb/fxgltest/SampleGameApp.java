@@ -48,7 +48,6 @@ public class SampleGameApp extends GameApplication {
         settings.setVersion("1.0");
         settings.setWidth(480);
         settings.setHeight(800);
-        settings.setExperimentalNative(true);
         settings.setApplicationMode(ApplicationMode.DEBUG);
     }
 
@@ -70,7 +69,7 @@ public class SampleGameApp extends GameApplication {
         onCollisionBegin(DropType.BUCKET, DropType.DROPLET, (bucket, droplet) -> {
             droplet.removeFromWorld();
             
-            play("drop.wav");
+            //play("drop.wav");
         });
     }
 
@@ -95,10 +94,6 @@ public class SampleGameApp extends GameApplication {
                 .viewWithBBox("droplet.png")
                 .with(new CollidableComponent(true))
                 .buildAndAttach();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
 
